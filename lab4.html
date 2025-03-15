@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Neva Morgan">
+
+<title>Lab 4: LTER Network Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab4_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab4_files/libs/quarto-html/quarto.js"></script>
+<script src="lab4_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab4_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab4_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab4_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab4_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab4_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab4_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab4_files/libs/bootstrap/bootstrap-8a79a254b8e706d3c925cde0a310d4f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="lab4_files/libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+
+<script src="lab4_files/libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#part-1-univariate-and-bivariate-statistics" id="toc-part-1-univariate-and-bivariate-statistics" class="nav-link active" data-scroll-target="#part-1-univariate-and-bivariate-statistics">Part 1: Univariate and Bivariate Statistics</a>
+  <ul class="collapse">
+  <li><a href="#explore-the-dataset" id="toc-explore-the-dataset" class="nav-link" data-scroll-target="#explore-the-dataset">Explore the dataset</a></li>
+  <li><a href="#chi-square---categorical-analysis" id="toc-chi-square---categorical-analysis" class="nav-link" data-scroll-target="#chi-square---categorical-analysis">Chi-square - Categorical Analysis</a></li>
+  <li><a href="#t-test---compare-two-means" id="toc-t-test---compare-two-means" class="nav-link" data-scroll-target="#t-test---compare-two-means">t-test - Compare two means</a></li>
+  <li><a href="#correlation---assess-relationships" id="toc-correlation---assess-relationships" class="nav-link" data-scroll-target="#correlation---assess-relationships">Correlation - Assess relationships</a></li>
+  <li><a href="#exercises-part-1" id="toc-exercises-part-1" class="nav-link" data-scroll-target="#exercises-part-1">Exercises: Part 1</a></li>
+  </ul></li>
+  <li><a href="#part-2-multivariate-statistics" id="toc-part-2-multivariate-statistics" class="nav-link" data-scroll-target="#part-2-multivariate-statistics">Part 2: Multivariate Statistics</a>
+  <ul class="collapse">
+  <li><a href="#explore-the-data-set" id="toc-explore-the-data-set" class="nav-link" data-scroll-target="#explore-the-data-set">Explore the Data set</a></li>
+  <li><a href="#exercises-part-2" id="toc-exercises-part-2" class="nav-link" data-scroll-target="#exercises-part-2">Exercises: Part 2</a></li>
+  <li><a href="#work" id="toc-work" class="nav-link" data-scroll-target="#work">Work</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  <li><a href="#citations" id="toc-citations" class="nav-link" data-scroll-target="#citations">Citations</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 4: LTER Network Data</h1>
+<p class="subtitle lead">Introduction to Statistics in R</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Neva Morgan <a href="mailto:neva.morgan@colostate.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This lab will walk us through some basic statistical tests in R, including chi-square, t-tests, and correlation tests. We will use data from the Long-Term Ecological Research (LTER) Network, which is a collaborative effort involving more than 2000 scientists and students investigating ecological processes over long temporal and broad spatial scales. The basics of this lab were adopted from a previous version of this course. This qmd for this lab can be downloaded <a href="">here</a>. Please download it into the repo of your choice and open it in RStudio to work through this lab:</p>
+<section id="part-1-univariate-and-bivariate-statistics" class="level1">
+<h1>Part 1: Univariate and Bivariate Statistics</h1>
+<p>In this portion of the lab you will be introduced to the process of conducting statistical tests in R, specifically <code>chi-square</code>, <code>t-tests</code>, and <code>correlation</code> tests. These are commonly used for univariate and bivariate data.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Uni- vs bi- variate data
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Univariate</strong> data consists of observations on a single variable. It describes one characteristic of a dataset without considering relationships between variables. Examples include:<br>
+- The heights of students in a class<br>
+- The daily temperature of a city<br>
+- The number of books read by individuals in a year<br>
+</p>
+<p><strong>Bivariate</strong> data involves observations on two variables and explores the relationship between them. It is used to analyze correlations or dependencies. Examples include:<br>
+- The relationship between students’ study time and their exam scores<br>
+- The correlation between temperature and ice cream sales<br>
+- The effect of age on income level<br>
+</p>
+</div>
+</div>
+</div>
+<p>To learn about this statistical tests, we will use data for cutthroat trout and salamander length and weights collected in Mack Creek, which is in the <a href="https://andrewsforest.oregonstate.edu/about">Andrews Forest Long-Term Ecological Research (LTER)</a> facility in Oregon in the Cascade Mountains. Specifically, these data were collected in different forest treatments: clear cut or old growth.</p>
+<p>First, to access the dataset(s) you will be using today install the <code>lterdatasampler</code> package (<code>remotes</code> is needed because <code>lterdatasampler</code> has to be installed from GitHub)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"lter/lterdatasampler"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now load in the libraries needed for this lab:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lterdatasampler)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(visdat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Then run the following line of code to retrieve the <code>and_vertebrates</code> data set and bring it into your R session:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>?and_vertebrates</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> and_vertebrates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="explore-the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="explore-the-dataset">Explore the dataset</h2>
+<p>To start, we’ll begin looking at the <code>and_vertebrates</code> dataset. Start this section with some EDA to understand its structure, variables and data types:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Viewing the data structure:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 32,209
+Columns: 16
+$ year        &lt;dbl&gt; 1987, 1987, 1987, 1987, 1987, 1987, 1987, 1987, 1987, 1987…
+$ sitecode    &lt;chr&gt; "MACKCC-L", "MACKCC-L", "MACKCC-L", "MACKCC-L", "MACKCC-L"…
+$ section     &lt;chr&gt; "CC", "CC", "CC", "CC", "CC", "CC", "CC", "CC", "CC", "CC"…
+$ reach       &lt;chr&gt; "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L"…
+$ pass        &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+$ unitnum     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2…
+$ unittype    &lt;chr&gt; "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R"…
+$ vert_index  &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, …
+$ pitnumber   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ species     &lt;chr&gt; "Cutthroat trout", "Cutthroat trout", "Cutthroat trout", "…
+$ length_1_mm &lt;dbl&gt; 58, 61, 89, 58, 93, 86, 107, 131, 103, 117, 100, 127, 99, …
+$ length_2_mm &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ weight_g    &lt;dbl&gt; 1.75, 1.95, 5.60, 2.15, 6.90, 5.90, 10.50, 20.60, 9.55, 13…
+$ clip        &lt;chr&gt; "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", "N…
+$ sampledate  &lt;date&gt; 1987-10-07, 1987-10-07, 1987-10-07, 1987-10-07, 1987-10-0…
+$ notes       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_dat</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exploring the metadata with the Help tab:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>?and_vertebrates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The data presented in this study shows an aquatic vertebrate population study of Cutthroat trout and the Cascade Torrent salamander and Coastal Giant salamanders within the clear cut or old growth coniferous forests of the Mack Creek. This was presented in Andrew’s Experimental Forest located in Oregon, measuring the lengths and weights of each observed from 1987 to 2019.</p>
+<p>The data also contains 32,209 observations that were measured with 16 variables: <u><strong>year</strong></u> (of observation), <u><strong>sitecode</strong></u> (sample area), <u><strong>section</strong></u> (CC = clear cut forest; OG = upstream old growth), <u><strong>reach</strong></u> (L = lower reach [0-50 meters]; M = middle reach [50-100 meters]; U = upper reach [100-150 meters]), <strong>pass</strong> (binary [1/2], electroshocking pass number), <u><strong>unitnum</strong></u> (channel unit number), <u><strong>unitype</strong></u> (C = cascade; I = riffle; IP = isolated pool; P = pool; R = rapid; S = small fall/step; SC = side channel; NA = not sampled by unit), <u><strong>vert_index</strong></u> (unique code for each vertebrate), <u><strong>pitnumber</strong></u> (tag number for each vertebrate), <u><strong>species</strong></u> (name of species), <u><strong>length_1_mm</strong></u> (vertebrate length in millimeters [otal or snout-fork length for trout, and snout-vent length for salamanders]), <u><strong>length_2_mm</strong></u> (snout-tail length in millimeters [for Coastal giant salamander only]), <u><strong>weight_g</strong></u> (mass in grams), <u><strong>clip</strong></u> (LV = left ventral fin; LVRV = left and right ventral fins; RV = right ventral fin; NONE = no ventral fin clip), <u><strong>sampledata</strong></u> (date of observation), <u><strong>notes</strong></u> (any additional comments).</p>
+</section>
+<section id="chi-square---categorical-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="chi-square---categorical-analysis">Chi-square - Categorical Analysis</h2>
+<p>When you are working with two categorical variables, the statistical test you use is a Chi-square test. This test helps identify a relationship between your two categorical variables.</p>
+<p>For example, we have two categorical variables in the <code>and_vertebrates</code> data set:</p>
+<ul>
+<li><p><code>section</code> = two forest sections, clear cut (CC) and old growth (OG)</p></li>
+<li><p><code>unittype</code> = stream channel unit classification type (C = cascade, I = riffle, IP = isolated pool (not connected to channel), P = pool, R = rapid, S = step (small falls), SC = side channel, NA = not sampled by unit)</p></li>
+</ul>
+<p>Lets focus this question on Cutthroat trout. First explore the abundance of cutthroat trout in different channel types, using the <code>count()</code> function to return the total count/number of observations in each group - making sure to limit your analysis to “Cutthroat trout”.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Cutthroat trout"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(unittype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+  unittype     n
+  &lt;chr&gt;    &lt;int&gt;
+1 C        11419
+2 I           23
+3 IP         105
+4 P         5470
+5 R          420
+6 S            9
+7 SC        2377
+8 &lt;NA&gt;       610</code></pre>
+</div>
+</div>
+<p>This output tells us that there are quite a few observations with the <code>NA</code> category, meaning channel type was unknown or not recorded. Let’s edit the workflow above slightly, using <code>drop_na()</code> to remove any rows within a specified column (or columns) that have NA values:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Cutthroat trout"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(unittype) <span class="sc">|&gt;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(unittype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 2
+  unittype     n
+  &lt;chr&gt;    &lt;int&gt;
+1 C        11419
+2 I           23
+3 IP         105
+4 P         5470
+5 R          420
+6 S            9
+7 SC        2377</code></pre>
+</div>
+</div>
+<p>This returns just about the same data frame as the first method, but now with the NA category removed because it dropped any observations that were <code>NA</code> for <code>unittype</code>.</p>
+<p>From this we also observe that the highest Cutthroat trout abundances are found in cascade (C), pool (P), and side channel (SC) habitats.</p>
+<p>Now, our question expands beyond this one categorical variable (channel type) and we want to know if abundance is affected by both channel and and forest type (<code>section</code>). Here, <em>our null hypothesis is that forest and channel type are independent</em>. To test this, we use the <code>chisq.test()</code> to carry out a chi-square test, but first we have to reformat our data into a <strong>contingency table</strong>.</p>
+<p>A contingency table is in matrix format, where each cell is the frequency (in this case seen as abundance) of Cutthroat trout in each combination of categorical variables (forest type and channel unit). We can create a contingency table with the <code>table()</code> function. For this analysis, lets also keep just the 3 most abundant unit types for Cutthroat trout (C, P and SC).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First clean the dataset to create the contingency table from</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>trout_clean <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Cutthroat trout"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(unittype <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"C"</span>, <span class="st">"P"</span>, <span class="st">"SC"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(unittype, section)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>cont_table <span class="ot">&lt;-</span> <span class="fu">table</span>(trout_clean<span class="sc">$</span>section, trout_clean<span class="sc">$</span>unittype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>To execute the Chi-square test does not take that much code, but it is important to note that by default, <code>chisq.test()</code> assumes the null hypothesis is that all frequencies have equal probability. If you have different pre-conceived frequency probabilities for your data you have to define those within the <code>chisq.test()</code> function.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(cont_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  cont_table
+X-squared = 188.68, df = 2, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Looking at these results, we see an extremely small p-valuetelling us there <em>is</em> a significant relationship between forest type and channel unit (i.e., we rejected our null hypothesis).</p>
+<p>Lets look at the abundance distribution visually:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>trout_clean  <span class="sc">|&gt;</span>  </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(unittype, section)  <span class="sc">|&gt;</span>  </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">ggbarplot</span>(<span class="at">x =</span> <span class="st">'unittype'</span>, <span class="at">y =</span> <span class="st">'n'</span>, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fill =</span> <span class="st">'section'</span>, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">add =</span> <span class="st">"mean_se"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="t-test---compare-two-means" class="level2">
+<h2 class="anchored" data-anchor-id="t-test---compare-two-means">t-test - Compare two means</h2>
+<p>Previous work has shown that forest harvesting practics can impact aquatic vertebrate biomass (Kaylor &amp; Warren 2017). Using the <code>and_vertebrates</code> data set we can investigate this by comparing weight to forest type (clear cut or old growth). This involves a test to compare the means (average weight) among two groups (clear cut and old growth forests) using a t-test.</p>
+<p>Let’s focus on conducting this test for Cutthroat trout. We can use the same <code>trout_clean</code> data set we made earlier so long as we drop all NAs in <code>weight_g</code>. Once this is done, we can visualize the differences in weight among forest type with a boxplot:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>trout_clean <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(weight_g) <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">ggviolin</span>(<span class="at">x =</span> <span class="st">"section"</span>, </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y     =</span> <span class="st">"weight_g"</span>, </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">add   =</span> <span class="st">"boxplot"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">color =</span> <span class="st">"section"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We don’t see too much of a difference based on this visual, but we need to conduct the statistical test to verify. Before we dive into the statistical t-test, we must check our assumptions!</p>
+<p><strong>Test Assumptions</strong>: A t-test assumes the <em>variance of each group is equal</em> and the data are <em>normally distributed</em>.</p>
+<p><em>Equal Variance</em> We can test for equal variances with the function <code>var.test()</code>, where the <em>null</em> hypothesis is that the variances are equal. In this step, we need two vectors of the weights in each separate forest section. You can use <code>pull()</code> to convert a single column of a data frame/tibble to a vector, and we want to do this for clear cut and old growth forests.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cc_weight <span class="ot">&lt;-</span> trout_clean <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(section <span class="sc">==</span> <span class="st">"CC"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(weight_g)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>og_weight <span class="ot">&lt;-</span> trout_clean <span class="sc">|&gt;</span> </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(section <span class="sc">==</span> <span class="st">"OG"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(weight_g)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(cc_weight, og_weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test to compare two variances
+
+data:  cc_weight and og_weight
+F = 1.2889, num df = 6310, denom df = 5225, p-value &lt; 2.2e-16
+alternative hypothesis: true ratio of variances is not equal to 1
+95 percent confidence interval:
+ 1.223686 1.357398
+sample estimates:
+ratio of variances 
+          1.288892 </code></pre>
+</div>
+</div>
+<p>The results of this test suggests the variances are not equal. How do we know this? If you can’t remember, please refresh your memory of the null hypothesis for the variance test and how to interpret the p-value. - We know this because</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>One option for data with unequal variances is to use the non parametric Welch t-test, which does not assume equal variances. We will explore this test later.</p>
+</div>
+</div>
+<p><em>Normal Distribution</em> A t-test mandates data with a normal distribtution. Here we can use a visual method to access the normality of the data:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ggpubr<span class="sc">::</span><span class="fu">ggarrange</span>(ggpubr<span class="sc">::</span><span class="fu">gghistogram</span>(cc_weight, <span class="at">main =</span> <span class="st">"Clear Cut"</span>), </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                  ggpubr<span class="sc">::</span><span class="fu">gghistogram</span>(og_weight, <span class="at">main =</span> <span class="st">"Old Growth"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see from the histograms that the data are very right skewed. When we see a heavy right skew, we know a log transform can help normalize the data. Let’s check the variances like we did before using the log transformed values:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(<span class="fu">log</span>(cc_weight), <span class="fu">log</span>(og_weight))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test to compare two variances
+
+data:  log(cc_weight) and log(og_weight)
+F = 1.0208, num df = 6310, denom df = 5225, p-value = 0.4374
+alternative hypothesis: true ratio of variances is not equal to 1
+95 percent confidence interval:
+ 0.9691443 1.0750427
+sample estimates:
+ratio of variances 
+          1.020787 </code></pre>
+</div>
+</div>
+<p>Now we have a much higher p-value, indicating support for the null that the variances of log-transformed data are equal. So we can use the default <code>t.test()</code> test which assumes equal variances, but only on a log transformed weight variable.</p>
+<p>The <code>t.test()</code> function takes in your dependent (in our case trout weight) and independent (forest type) variables as vectors. The order of the variables in the <code>t.test()</code> function is {dependent variable} ~ {independent variable}. We use the <code>~</code> to specify a model, telling the test we want to know if weight <em>varies by</em> forest section.</p>
+<p>Remember we also want to log transform the weight values and then specify that our variances are equal since we confirmed that with <code>var.test()</code> above, so the final <code>t.test()</code> call would be this:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="fu">log</span>(trout_clean<span class="sc">$</span>weight_g) <span class="sc">~</span> trout_clean<span class="sc">$</span>section, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  log(trout_clean$weight_g) by trout_clean$section
+t = 2.854, df = 11535, p-value = 0.004324
+alternative hypothesis: true difference in means between group CC and group OG is not equal to 0
+95 percent confidence interval:
+ 0.02222425 0.11969560
+sample estimates:
+mean in group CC mean in group OG 
+        1.457042         1.386082 </code></pre>
+</div>
+</div>
+<p>The output of this test gives us the test statistics, p-value, and the means for each of our forest groups. Given the p-value of 0.0043, we reject the null hypothesis (mean Cutthroat weight is the same in clear cut and old growth forest sections), and looking at our results - specifically the means - we can conclude that <em>Cutthroat trout weight was observed to be significantly higher in clear cut forests compared to old growth forests</em>. Remember that the mean weight values are log transformed and not the raw weight in grams. The relationship can still be interpreted the same, but you will want to report the means from the raw weight data.</p>
+<p>How does this relate to the original hypothesis based on the graph we made at the beginning of this section?</p>
+<p><strong>Welch Two Sample t-test</strong></p>
+<p>Alternatively, instead of transforming our variable we can change the default <code>t.test()</code> argument by specifying <code>var.equal = FALSE</code>, which will then conduct a Welch t-test, which does not assume equal variances among groups.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(trout_clean<span class="sc">$</span>weight_g <span class="sc">~</span> trout_clean<span class="sc">$</span>section, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  trout_clean$weight_g by trout_clean$section
+t = 4.5265, df = 11491, p-value = 6.056e-06
+alternative hypothesis: true difference in means between group CC and group OG is not equal to 0
+95 percent confidence interval:
+ 0.4642016 1.1733126
+sample estimates:
+mean in group CC mean in group OG 
+        8.988807         8.170050 </code></pre>
+</div>
+</div>
+<p>While using a slightly different method, our conclusions are the same, finding that Cutthroat trout had significantly higher weights in clear cut forests than old growth.</p>
+<div class="alert alert-info">
+<p>Note: In the <code>t.test()</code> function you can add <code>paired = TRUE</code> to conduct a paired t-test. These are for cases when the groups are ‘paired’ for each observation, meaning each group/treatment was applied to the same individual, such as experiments that test the impact of a treatment, with measurements before and after the experiment.</p>
+</div>
+</section>
+<section id="correlation---assess-relationships" class="level2">
+<h2 class="anchored" data-anchor-id="correlation---assess-relationships">Correlation - Assess relationships</h2>
+<p>To assess the relationship between two <strong>continuous variables</strong>, you use a correlation test, which is the <code>cor.test()</code> function. Correlation tests assess the presence of a significant relationship and the strength of each relationship (i.e., the correlation coefficient). There are multiple correlation methods you can use with this function but by default, it uses the Pearson correlation method which assumes your data are normally distributed and there is a linear relationship. If these assumptions are not met, you can use a Spearman Rank correlation test, a non-parametric test that is not sensitive to the variable distribution. To use this method, specify <code>spearman</code> for <code>method</code>.</p>
+<p>For our <code>and_vertebrates</code> data set, we can test the relationship of length and weight. Let’s test the hypothesis that body length is positively correlated with weight, such that longer individuals will also weigh more, specifically looking at the Coastal Giant salamander.</p>
+<p>First let’s clean our data set to just include the Coastal giant salamander and remove missing values for length and weight.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>sally_clean <span class="ot">&lt;-</span> and_vertebrates <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Coastal giant salamander"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(length_2_mm, weight_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Testing Assumptions</strong></p>
+<p>Let’s look at the distribution of these variables first:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(<span class="fu">gghistogram</span>(sally_clean<span class="sc">$</span>length_2_mm, <span class="at">title =</span> <span class="st">"Length"</span>),</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gghistogram</span>(sally_clean<span class="sc">$</span>weight_g, <span class="at">title =</span> <span class="st">"Weight"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>They both look pretty skewed, therefore likely not normally distributed. We can statistically test if a variable fits a normal distribution with the <code>shapiro.test()</code> function, which is the Shapiro-Wilk normality text. However note that this function only runs for 5,000 observations or less, so we will test for normality for a sample of our <code>sally_clean</code> data set:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> sally_clean <span class="sc">|&gt;</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5000</span>) </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(s<span class="sc">$</span>length_2_mm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  s$length_2_mm
+W = 0.93265, p-value &lt; 2.2e-16</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(s<span class="sc">$</span>weight_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  s$weight_g
+W = 0.55516, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>The <em>null hypothesis of the Shapiro-Wilk normality test is that the variable is normally distributed</em>, so a significant p-value less than 0.05 (as we see for both of our variables here) tells use that our data does not fit a normal distribution.</p>
+<p>Therefore we have two options as we did with our earlier t-test example: transform the variables <em>or</em> use the non-parametric test.</p>
+<p><strong>Variable transformation</strong></p>
+<p>Lets try the first option by log transforming our variables, first viewing the log-transformed distribution for each variable.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">gghistogram</span>(<span class="fu">log</span>(sally_clean<span class="sc">$</span>length_2_mm), <span class="at">title =</span> <span class="st">"Length"</span>), </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">gghistogram</span>(<span class="fu">log</span>(sally_clean<span class="sc">$</span>weight_g), <span class="at">title =</span> <span class="st">"Weight"</span>) </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Since the log-transformed data look normally distributed (note that we can test using the Shapiro-Wilk normality test on the log-transformed data), we can use the Pearson’s correlation test (the default for <code>cor.test()</code>). All we need to add to the <code>cor.test()</code> argument is the two variables of our <code>sally_clean</code> data set we want to test a relationship for, and keep them log-transformed since those distributions looked closer to a normal distribution (visually at least).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="fu">log</span>(sally_clean<span class="sc">$</span>length_2_mm), <span class="fu">log</span>(sally_clean<span class="sc">$</span>weight_g))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  log(sally_clean$length_2_mm) and log(sally_clean$weight_g)
+t = 402.85, df = 6229, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.9804036 0.9822403
+sample estimates:
+      cor 
+0.9813443 </code></pre>
+</div>
+</div>
+<p>From these results we see a very small p-value, meaning there is a significant association between the two, and a correlation coefficient of 0.98, representing a strong, positive correlation.</p>
+<p>Let’s look at this correlation visually:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sally_clean <span class="sc">|&gt;</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_length =</span> <span class="fu">log</span>(length_2_mm), <span class="at">log_weight =</span> <span class="fu">log</span>(weight_g)) <span class="sc">|&gt;</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggscatter</span>(<span class="at">x =</span> <span class="st">'log_length'</span>, </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="st">'log_weight'</span>, </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">35</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">add =</span> <span class="st">"loess"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Spearman Correlation Test</strong></p>
+<p>Let’s now perform the correlation test again but keeping our raw data and instead specifying <code>method = 'spearman'</code>, as the Spearman test is better for non-parametric and non-linear data sets.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(sally_clean<span class="sc">$</span>length_2_mm, sally_clean<span class="sc">$</span>weight_g, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  sally_clean$length_2_mm and sally_clean$weight_g
+S = 819296957, p-value &lt; 2.2e-16
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.9796802 </code></pre>
+</div>
+</div>
+<p>These results also represent a significant, positive relationship between length and weight for the Coastal Giant salamander, with a very high correlation coefficient.</p>
+</section>
+<section id="exercises-part-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercises-part-1">Exercises: Part 1</h2>
+<p>Each question requires you to carry out a statistical analysis to test some hypothesis related to the <code>and_vertebrates</code> data set. To answer each question fully:</p>
+<ul>
+<li><p>Include the code you used to clean the data and conduct the appropriate statistical test. (<em>Including the steps to assess and address your statistical test assumptions</em>).</p></li>
+<li><p>Report the findings of your test in proper scientific format (with the p-value in parentheses).</p></li>
+</ul>
+<p><br></p>
+<p><strong>1.</strong> Conduct a chi-square test similar to the one carried out above, but test for a relationship between forest type (<code>section</code>) and channel unit (<code>unittype</code>) for <em>Coastal giant salamander</em> abundance. <em>Keep all unittypes</em> instead of filtering any like we did for the Cutthroat trout (10 pts.)</p>
+<p><br></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Coastal giant salamander"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(unittype) <span class="sc">|&gt;</span> </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(unittype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  unittype     n
+  &lt;chr&gt;    &lt;int&gt;
+1 C         7697
+2 IP          50
+3 P         1943
+4 R           72
+5 S            2
+6 SC        1994</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>GS_clean <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Coastal giant salamander"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(unittype, section)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>GS_table <span class="ot">&lt;-</span> <span class="fu">table</span>(GS_clean<span class="sc">$</span>section, GS_clean<span class="sc">$</span>unittype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(cont_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  cont_table
+X-squared = 188.68, df = 2, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>GS_clean  <span class="sc">|&gt;</span>  </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(unittype, section)  <span class="sc">|&gt;</span>  </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">ggbarplot</span>(<span class="at">x =</span> <span class="st">'unittype'</span>, <span class="at">y =</span> <span class="st">'n'</span>, </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fill =</span> <span class="st">'section'</span>, </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>),</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">add =</span> <span class="st">"mean_se"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Chi-Sqaure Test shows that there is a significant difference between the forest type (section) and channel unit (unittype) for Coastal giant salamander abundance. As shown above in the table, there is a larger abundance of Coastal giant salamanders in cascades, pools, and side channel water bodies than the other three tested for (the most abudant in cascades) and an even split between clear cut growth and older growth confierious forests.</p>
+<p><strong>2.</strong> Test the hypothesis that there is a significant difference in species biomass between clear cut and old growth forest types for the <em>Coastal Giant salamander</em>. (10 pts.)</p>
+<p><br></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>GS_clean <span class="sc">|&gt;</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(weight_g) <span class="sc">|&gt;</span> </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">ggviolin</span>(<span class="at">x =</span> <span class="st">"section"</span>, </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y     =</span> <span class="st">"weight_g"</span>, </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">add   =</span> <span class="st">"boxplot"</span>,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">color =</span> <span class="st">"section"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li></li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cc_weight <span class="ot">&lt;-</span> GS_clean <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(section <span class="sc">==</span> <span class="st">"CC"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(weight_g)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>og_weight <span class="ot">&lt;-</span> GS_clean <span class="sc">|&gt;</span> </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(section <span class="sc">==</span> <span class="st">"OG"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(weight_g)</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(cc_weight, og_weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test to compare two variances
+
+data:  cc_weight and og_weight
+F = 0.82901, num df = 3027, denom df = 3309, p-value = 1.439e-07
+alternative hypothesis: true ratio of variances is not equal to 1
+95 percent confidence interval:
+ 0.7732148 0.8889213
+sample estimates:
+ratio of variances 
+         0.8290065 </code></pre>
+</div>
+</div>
+<p>*The results of this test suggests the variances are not equal. How do we know this? If you can’t remember, please refresh your memory of the null hypothesis for the variance test and how to interpret the p-value.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>ggpubr<span class="sc">::</span><span class="fu">ggarrange</span>(ggpubr<span class="sc">::</span><span class="fu">gghistogram</span>(cc_weight, <span class="at">main =</span> <span class="st">"Clear Cut"</span>), </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                  ggpubr<span class="sc">::</span><span class="fu">gghistogram</span>(og_weight, <span class="at">main =</span> <span class="st">"Old Growth"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(<span class="fu">log</span>(cc_weight), <span class="fu">log</span>(og_weight))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test to compare two variances
+
+data:  log(cc_weight) and log(og_weight)
+F = 0.90548, num df = 3027, denom df = 3309, p-value = 0.005299
+alternative hypothesis: true ratio of variances is not equal to 1
+95 percent confidence interval:
+ 0.8445382 0.9709179
+sample estimates:
+ratio of variances 
+         0.9054763 </code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="fu">log</span>(trout_clean<span class="sc">$</span>weight_g) <span class="sc">~</span> trout_clean<span class="sc">$</span>section, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  log(trout_clean$weight_g) by trout_clean$section
+t = 2.854, df = 11535, p-value = 0.004324
+alternative hypothesis: true difference in means between group CC and group OG is not equal to 0
+95 percent confidence interval:
+ 0.02222425 0.11969560
+sample estimates:
+mean in group CC mean in group OG 
+        1.457042         1.386082 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(trout_clean<span class="sc">$</span>weight_g <span class="sc">~</span> trout_clean<span class="sc">$</span>section, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  trout_clean$weight_g by trout_clean$section
+t = 4.5265, df = 11491, p-value = 6.056e-06
+alternative hypothesis: true difference in means between group CC and group OG is not equal to 0
+95 percent confidence interval:
+ 0.4642016 1.1733126
+sample estimates:
+mean in group CC mean in group OG 
+        8.988807         8.170050 </code></pre>
+</div>
+</div>
+<p><strong>3.</strong> Test the correlation between body length (snout to fork length) and body mass for <em>Cutthroat trout</em>. (Hint: run <code>?and_vertebrates</code> to find which length variable represents snout to fork length) (10 pts.)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>?and_vertebrates <span class="co"># snout-fork length for trout -&gt; length_1_mm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>cut_clean <span class="ot">&lt;-</span> and_vertebrates <span class="sc">|&gt;</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Cutthroat trout"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(length_1_mm, weight_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(<span class="fu">gghistogram</span>(cut_clean<span class="sc">$</span>length_1_mm, <span class="at">title =</span> <span class="st">"Length"</span>),</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gghistogram</span>(cut_clean<span class="sc">$</span>weight_g, <span class="at">title =</span> <span class="st">"Weight"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> cut_clean <span class="sc">|&gt;</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5000</span>) </span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(c<span class="sc">$</span>length_1_mm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  c$length_1_mm
+W = 0.94202, p-value &lt; 2.2e-16</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(c<span class="sc">$</span>weight_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  c$weight_g
+W = 0.80778, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">gghistogram</span>(<span class="fu">log</span>(cut_clean<span class="sc">$</span>length_1_mm), <span class="at">title =</span> <span class="st">"Length"</span>), </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">gghistogram</span>(<span class="fu">log</span>(cut_clean<span class="sc">$</span>weight_g), <span class="at">title =</span> <span class="st">"Weight"</span>) </span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="fu">log</span>(cut_clean<span class="sc">$</span>length_1_mm), <span class="fu">log</span>(cut_clean<span class="sc">$</span>weight_g))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  log(cut_clean$length_1_mm) and log(cut_clean$weight_g)
+t = 915.66, df = 12590, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.9923125 0.9928295
+sample estimates:
+      cor 
+0.9925755 </code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>cut_clean <span class="sc">|&gt;</span> </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_length =</span> <span class="fu">log</span>(length_1_mm), <span class="at">log_weight =</span> <span class="fu">log</span>(weight_g)) <span class="sc">|&gt;</span> </span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggscatter</span>(<span class="at">x =</span> <span class="st">'log_length'</span>, </span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="st">'log_weight'</span>, </span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">35</span>,</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">add =</span> <span class="st">"loess"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(cut_clean<span class="sc">$</span>length_1_mm, cut_clean<span class="sc">$</span>weight_g, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  cut_clean$length_1_mm and cut_clean$weight_g
+S = 2669679446, p-value &lt; 2.2e-16
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.9919772 </code></pre>
+</div>
+</div>
+<p>These results also represent a significant, positive relationship between length and weight for the Cutthroat trout, with a very high correlation (rho).</p>
+<p><br> <br></p>
+</section>
+</section>
+<section id="part-2-multivariate-statistics" class="level1">
+<h1>Part 2: Multivariate Statistics</h1>
+<p>In this part you will be introduced to statistical tests for dealing with more complex data sets, such as when you need to compare across more than two groups (ANOVA) or assess relationships in the form of an equation to predict response variables given single or multiple predictors (Regression).</p>
+<p>We need to install one new package for today to use a specific statistical test. This package is called <code>car</code>. Follow the steps below to install the package, and then read in your libraries and data set for the lesson.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install the car package</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"car"</span>)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>??car</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data set</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"pie_crab"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="explore-the-data-set" class="level2">
+<h2 class="anchored" data-anchor-id="explore-the-data-set">Explore the Data set</h2>
+<p>This data set consists of Fiddler crab body size measured in salt marshes from Florida to Massachusetts during summer 2016 at Plum Island Ecosystem LTER.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(pie_crab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 392
+Columns: 9
+$ date          &lt;date&gt; 2016-07-24, 2016-07-24, 2016-07-24, 2016-07-24, 2016-07…
+$ latitude      &lt;dbl&gt; 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, …
+$ site          &lt;chr&gt; "GTM", "GTM", "GTM", "GTM", "GTM", "GTM", "GTM", "GTM", …
+$ size          &lt;dbl&gt; 12.43, 14.18, 14.52, 12.94, 12.45, 12.99, 10.32, 11.19, …
+$ air_temp      &lt;dbl&gt; 21.792, 21.792, 21.792, 21.792, 21.792, 21.792, 21.792, …
+$ air_temp_sd   &lt;dbl&gt; 6.391, 6.391, 6.391, 6.391, 6.391, 6.391, 6.391, 6.391, …
+$ water_temp    &lt;dbl&gt; 24.502, 24.502, 24.502, 24.502, 24.502, 24.502, 24.502, …
+$ water_temp_sd &lt;dbl&gt; 6.121, 6.121, 6.121, 6.121, 6.121, 6.121, 6.121, 6.121, …
+$ name          &lt;chr&gt; "Guana Tolomoto Matanzas NERR", "Guana Tolomoto Matanzas…</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_dat</span>(pie_crab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Learn more about each variable:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>??pie_crab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>This data set provides a great opportunity to explore Bergmann’s rule: where organisms at higher latitudes are larger than those at lower latitudes. There are various hypotheses on what drives this phenomenon, which you can read more about in <a href="https://onlinelibrary.wiley.com/doi/10.1002/ece3.5883">Johnson et al.&nbsp;2019</a>.</p>
+<p>We have a continuous size variable (carapace width in mm), our dependent variable, and various predictor variables: site (categorical), latitude (continuous), air temperature (continuous) and water temperature (continuous).</p>
+<p>Let’s explore the sample size at each site and how many sites are in this data set</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample size per site</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(pie_crab, site)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 2
+   site      n
+   &lt;chr&gt; &lt;int&gt;
+ 1 BC       37
+ 2 CC       27
+ 3 CT       33
+ 4 DB       30
+ 5 GTM      28
+ 6 JC       30
+ 7 NB       29
+ 8 NIB      30
+ 9 PIE      28
+10 RC       25
+11 SI       30
+12 VCR      30
+13 ZI       35</code></pre>
+</div>
+</div>
+<p>We have 13 sites with ~30 individual male crabs measured at each site.</p>
+<p>Let’s also check the range of our continuous variables:</p>
+</section>
+<section id="exercises-part-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercises-part-2">Exercises: Part 2</h2>
+<ol type="1">
+<li><strong>After</strong> completing the ANOVA test (and post-hoc Tukey’s HSD) above to test for significant differences in crab size among 3 different sites: <strong>1)</strong> Create a boxplot showing the carapace width for each site where sites are <em>ordered by latitude</em> and <strong>2)</strong> report the findings of the statistical test as you would in a scientific paper. <em>Include both the code to create the boxplot and an image of the figure.</em> (10 pts.)</li>
+</ol>
+</section>
+<section id="work" class="level2">
+<h2 class="anchored" data-anchor-id="work">Work</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>pie_crab <span class="sc">|&gt;</span> </span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggboxplot</span>(<span class="at">x =</span> <span class="st">'site'</span>, <span class="at">y =</span> <span class="st">'size'</span>, <span class="at">col =</span> <span class="st">'site'</span>) <span class="sc">+</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span>.<span class="dv">25</span>) <span class="sc">+</span> </span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.postition =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>norms <span class="ot">&lt;-</span> pie_crab <span class="sc">|&gt;</span> </span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>(<span class="at">data =</span> <span class="sc">-</span>site) <span class="sc">|&gt;</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Shapiro =</span> <span class="fu">map</span>(data, <span class="sc">~</span> <span class="fu">shapiro.test</span>(.x<span class="sc">$</span>size)),</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">n =</span> <span class="fu">map_dbl</span>(data, nrow),</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">glance_shapiro =</span> <span class="fu">map</span>(Shapiro, broom<span class="sc">::</span>glance)) <span class="sc">|&gt;</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(glance_shapiro)</span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>flextable<span class="sc">::</span><span class="fu">flextable</span>(dplyr<span class="sc">::</span><span class="fu">select</span>(norms, site, n, statistic, p.value)) <span class="sc">|&gt;</span></span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">set_caption</span>(<span class="st">"Shapiro-Wilk normality test for size at each site"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-7ff3fbb8{}.cl-7fedbb5e{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7fefe370{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-7fefe37a{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-7ff01d72{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7ff01d7c{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7ff01d7d{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7ff01d86{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7ff01d87{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7ff01d90{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-7ff3fbb8"><thead><tr style="overflow-wrap:break-word;"><th class="cl-7ff01d72"><p class="cl-7fefe370"><span class="cl-7fedbb5e">site</span></p></th><th class="cl-7ff01d7c"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">n</span></p></th><th class="cl-7ff01d7c"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">statistic</span></p></th><th class="cl-7ff01d7c"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">p.value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">GTM</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">28</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9007814</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.0119337484</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">SI</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">30</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9705352</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.5539208550</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">NIB</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">30</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9728297</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.6191340731</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">ZI</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">35</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9744583</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.5765589900</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">RC</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">25</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9315062</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.0941588802</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">VCR</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">30</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9444682</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.1200262239</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">DB</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">30</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9576271</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.2690631942</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">JC</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">30</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9634754</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.3788327942</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">CT</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">33</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9277365</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.0301785639</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">NB</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">29</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9675367</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.4949587443</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">CC</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">27</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.9354659</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.0941803007</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d7d"><p class="cl-7fefe370"><span class="cl-7fedbb5e">BC</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">37</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.8885721</span></p></td><td class="cl-7ff01d86"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.0014402753</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-7ff01d87"><p class="cl-7fefe370"><span class="cl-7fedbb5e">PIE</span></p></td><td class="cl-7ff01d90"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">28</span></p></td><td class="cl-7ff01d90"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.8489399</span></p></td><td class="cl-7ff01d90"><p class="cl-7fefe37a"><span class="cl-7fedbb5e">0.0008899392</span></p></td></tr></tbody></table></div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>res_aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(size <span class="sc">~</span> site, <span class="at">data =</span> pie_crab)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="fu">gghistogram</span>(res_aov<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-47-2.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res_aov<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  res_aov$residuals
+W = 0.99708, p-value = 0.7122</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(size <span class="sc">~</span> site, <span class="at">data =</span> pie_crab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Levene's Test for Homogeneity of Variance (center = median)
+       Df F value    Pr(&gt;F)    
+group  12  9.2268 1.151e-15 ***
+      379                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co">#perform Welch's ANOVA</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="fu">oneway.test</span>(size <span class="sc">~</span> site, <span class="at">data =</span> pie_crab, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One-way analysis of means (not assuming equal variances)
+
+data:  size and site
+F = 39.108, num df = 12.00, denom df = 145.79, p-value &lt; 2.2e-16</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter a subset of the sites</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>pie_sites <span class="ot">&lt;-</span> pie_crab <span class="sc">|&gt;</span> </span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(site <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"GTM"</span>, <span class="st">"DB"</span>, <span class="st">"PIE"</span>))</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for equal variance</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(size <span class="sc">~</span> site, <span class="at">data =</span> pie_sites)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Levene's Test for Homogeneity of Variance (center = median)
+      Df F value Pr(&gt;F)
+group  2   0.548 0.5802
+      83               </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that the variances are equal (p = 0.5802), so we can proceed with the ANOVA</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ANOVA for the data subset</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>pie_anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(size <span class="sc">~</span> site, <span class="at">data =</span> pie_sites)</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a><span class="co"># View the ANOVA results </span></span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pie_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)    
+site         2  521.5  260.75   60.02 &lt;2e-16 ***
+Residuals   83  360.6    4.34                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(pie_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = size ~ site, data = pie_sites)
+
+$site
+             diff       lwr       upr   p adj
+GTM-DB  -3.200786 -4.507850 -1.893722 3.0e-07
+PIE-DB   2.899929  1.592865  4.206992 2.9e-06
+PIE-GTM  6.100714  4.771306  7.430123 0.0e+00</code></pre>
+</div>
+</div>
+<p><br></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(pie_anova, <span class="at">x =</span> <span class="st">"site"</span>, <span class="at">y =</span> <span class="st">"size"</span>, <span class="at">palette =</span> <span class="st">"jco"</span>) <span class="sc">+</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span>.<span class="dv">25</span>) <span class="sc">+</span> </span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.postition =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To understand the difference in crab sizes as they relate to their latitudinal location, we based our research following the Fiddler crab body size data set. With 13 sites that range in latitude from 30 degrees to 42 degrees and 13 different classes of sites, we aimed to understand the distribution within each group using an initial ANOVA test and Shapiro-Wilk normality test. With all the cases, their p-values were below 0.01, with an expection for BC and PIE, this means that the data fits within a normal distribution across grouping. During the Shapiro-WIlk normaily test, we founda residual with p-value of 0.71, accepting the null hypothesis that this data fits a normal distribution. Next using the Leven’s test to understand the equalily of variance across all groups, we confirmed that the data set we focused on was NOT equal. We then tested the response to a Welch ANOVA, specifying the variance was false, this proved a highly statistically significant corelation with our site’s mean is different from the others.</p>
+<p>To understand further, we south out to use a Tukey’s HSD post-hoc test, to understand the pairwise comparisons of the 13 sites and their latitudinal significance to crab size. To simplify the statisical approach we focused on 3 sites; GTM, DB, and PIE, since they represent the wide breadth of latitudinal differences in the data. Using a 95% confidence interval with the Tukey, we found that there was a significant difference between GTM, DB, and PIE, as shown in the box plot represented above.</p>
+<ol start="2" type="1">
+<li>Conduct a simple linear regression for the effect of <code>water_temp_sd</code> (a measure reflecting annual variation in water temperature) on carapace width. Report your findings (include code <em>and</em> a sentence reporting the results) AND create a plot with a line of best fit. <em>Include both the code to create the plot and an image of the figure</em>. (10 pts).</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>pie_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(size <span class="sc">~</span> water_temp_sd, <span class="at">data =</span> pie_crab)</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="co">#view the results of the linear model</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pie_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = size ~ water_temp_sd, data = pie_crab)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.9428 -2.6948 -0.2145  2.6573  8.8070 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   13.93728    1.15338  12.084   &lt;2e-16 ***
+water_temp_sd  0.09938    0.15716   0.632    0.528    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.506 on 390 degrees of freedom
+Multiple R-squared:  0.001024,  Adjusted R-squared:  -0.001537 
+F-statistic: 0.3999 on 1 and 390 DF,  p-value: 0.5275</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>pie_crab <span class="sc">|&gt;</span> </span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggscatter</span>(<span class="at">x =</span> <span class="st">'water_temp_sd'</span>, <span class="at">y =</span> <span class="st">'size'</span>, </span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> .<span class="dv">35</span>, </span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">add =</span> <span class="st">"reg.line"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab4_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Conduct a multiple linear regression for the effects of <code>latitude</code>, <code>air_temp_sd</code>, and <code>water_temp_sd</code> on carapace width. <strong>First</strong> check for correlations among the three predictor variables (and report the correlation table) and <strong>second</strong> report your findings from the multiple linear regression (code <em>and</em> a sentence reporting the results). (10 pts.)</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>pie_crab <span class="sc">|&gt;</span> </span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(latitude, air_temp_sd, water_temp_sd) <span class="sc">|&gt;</span> </span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                latitude air_temp_sd water_temp_sd
+latitude      1.00000000   0.7932130    0.04188273
+air_temp_sd   0.79321301   1.0000000    0.40970338
+water_temp_sd 0.04188273   0.4097034    1.00000000</code></pre>
+</div>
+</div>
+<p>The correlation table understanding the relationship between latitude, air temp sd, water temp sd have correlation between air temp and latitude, but water temp sd is not correlated to thier air temp or latitude since the correlation coefficient is less than 0.7.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>pie_mlm <span class="ot">&lt;-</span> <span class="fu">lm</span>(size <span class="sc">~</span> latitude <span class="sc">+</span> air_temp_sd <span class="sc">+</span> water_temp_sd, <span class="at">data =</span> pie_crab)</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pie_mlm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = size ~ latitude + air_temp_sd + water_temp_sd, data = pie_crab)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.7515 -1.8897  0.0506  1.9301  6.6746 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   -3.96880    1.54818  -2.564   0.0107 *  
+latitude       0.55940    0.06413   8.723   &lt;2e-16 ***
+air_temp_sd   -0.41713    0.30559  -1.365   0.1730    
+water_temp_sd  0.15927    0.16174   0.985   0.3254    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.832 on 388 degrees of freedom
+Multiple R-squared:  0.3516,    Adjusted R-squared:  0.3466 
+F-statistic: 70.13 on 3 and 388 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>The multiple linear regression model for the comparison of carapase size on latitude, air temp sd, water temp sd, shows a statistically significant trent indicating there is an impact on the combination of those predictors on the size of a crabs carapace.</p>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to the developers of <a href="https://lter.github.io/lterdatasampler/index.html"><code>lterdatasampler</code></a> for providing the data set and vignettes that helped guide the creation of this lesson plan.</p>
+</section>
+<section id="citations" class="level2">
+<h2 class="anchored" data-anchor-id="citations">Citations</h2>
+<ul>
+<li><p>Johnson, D. 2019. Fiddler crab body size in salt marshes from Florida to Massachusetts, USA at PIE and VCR LTER and NOAA NERR sites during summer 2016. ver 1. Environmental Data Initiative. <a href="https://doi.org/10.6073/pasta/4c27d2e778d3325d3830a5142e3839bb" class="uri">https://doi.org/10.6073/pasta/4c27d2e778d3325d3830a5142e3839bb</a> (Accessed 2021-05-27).</p></li>
+<li><p>Johnson DS, Crowley C, Longmire K, Nelson J, Williams B, Wittyngham S. The fiddler crab, Minuca pugnax, follows Bergmann’s rule. Ecol Evol. 2019;00:1–9. <a href="https://doi.org/10.1002/ece3.5883" class="uri">https://doi.org/10.1002/ece3.5883</a></p></li>
+</ul>
+<p><strong><em>Data Source:</em></strong> Gregory, S.V. and I. Arismendi. 2020. Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present ver 14. Environmental Data Initiative. <a href="https://doi.org/10.6073/pasta/7c78d662e847cdbe33584add8f809165" class="uri">https://doi.org/10.6073/pasta/7c78d662e847cdbe33584add8f809165</a></p>
+<p>Kaylor, M.J. and D.R. Warren. 2017. Linking riparian shade and the legacies of forest management to fish and vertebrate biomass in forested streams. Ecosphere <em>8</em>(6). <a href="https://doi.org/10.1002/ecs2.1845" class="uri">https://doi.org/10.1002/ecs2.1845</a></p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
