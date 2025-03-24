@@ -7,6 +7,8 @@ format:
    html:
     code-fold: true
     toc: true
+execute:
+  echo: true
 subtitle: 'Introduction to Statistics in R'
 ---
 
