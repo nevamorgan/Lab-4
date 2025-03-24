@@ -192,8 +192,7 @@ og_weight <- trout_clean |>
 var.test(cc_weight, og_weight)
 ```
 
-The results of this test suggests the variances are not equal. How do we know this? If you can't remember, please refresh your memory of the null hypothesis for the variance test and how to interpret the p-value.
- - We know this because 
+The results of this test suggests the variances are not equal. How do we know this? If you can't remember, please refresh your memory of the null hypothesis for the variance test and how to interpret the p-value. - We know this because
 
 ::: callout-note
 One option for data with unequal variances is to use the non parametric Welch t-test, which does not assume equal variances. We will explore this test later.
@@ -330,6 +329,7 @@ Each question requires you to carry out a statistical analysis to test some hypo
 **1.** Conduct a chi-square test similar to the one carried out above, but test for a relationship between forest type (`section`) and channel unit (`unittype`) for *Coastal giant salamander* abundance. *Keep all unittypes* instead of filtering any like we did for the Cutthroat trout (10 pts.)
 
 <br>
+
 ```{r}
 data |> 
   filter(species == "Coastal giant salamander") |> 
@@ -337,7 +337,8 @@ data |>
   count(unittype)
 
 ```
-This tibble can show us the distribution of obsercations based on the 6 locations taken for the data set, exemping any that were observed as NA to clean the data we are investigating for Coastal giant salamander abundance. 
+
+This tibble can show us the distribution of obsercations based on the 6 locations taken for the data set, exemping any that were observed as NA to clean the data we are investigating for Coastal giant salamander abundance.
 
 ```{r}
 GS_clean <- data |>
@@ -346,13 +347,13 @@ GS_clean <- data |>
 
 GS_table <- table(GS_clean$section, GS_clean$unittype)
 ```
+
 This is the cleaned data code for reducing the amount of those found with N/A.
-
-
 
 ```{r}
 chisq.test(cont_table)
 ```
+
 We can understand that the inital Chi-sqaured test indicated that there is a statistically significant relationship between location of the site and abundacne of Coastal giant salmanders.
 
 ```{r}
@@ -363,13 +364,13 @@ GS_clean  |>
                     palette = c("#00AFBB", "#E7B800"),
                     add = "mean_se") 
 ```
-The Chi-Sqaure Test shows that there is a significant difference between the forest type (section) and channel unit (unittype) for Coastal giant salamander abundance. As shown above in the table, there is a larger abundance of Coastal giant salamanders in cascades, pools, and side channel water bodies than the other three tested for (the most abudant in cascades) and an even split between clear cut growth and older growth confierious forests. 
 
-
+The Chi-Sqaure Test shows that there is a significant difference between the forest type (section) and channel unit (unittype) for Coastal giant salamander abundance. As shown above in the table, there is a larger abundance of Coastal giant salamanders in cascades, pools, and side channel water bodies than the other three tested for (the most abudant in cascades) and an even split between clear cut growth and older growth confierious forests.
 
 **2.** Test the hypothesis that there is a significant difference in species biomass between clear cut and old growth forest types for the *Coastal Giant salamander*. (10 pts.)
 
 <br>
+
 ```{r}
 GS_clean |> 
   drop_na(weight_g) |> 
@@ -380,7 +381,7 @@ GS_clean |>
                    palette = c("#00AFBB", "#E7B800")) 
 ```
 
-The data represented in the histogram plot above, shows that there isn't a realy difference between the Clear cut trees and old growth forests, indicating we need to clean the data further or add another indicator. 
+The data represented in the histogram plot above, shows that there isn't a realy difference between the Clear cut trees and old growth forests, indicating we need to clean the data further or add another indicator.
 
 ```{r}
 cc_weight <- GS_clean |> 
@@ -393,28 +394,30 @@ og_weight <- GS_clean |>
 
 var.test(cc_weight, og_weight)
 ```
+
 The results of this test suggests the variances are not equal. How do we know this? If you can't remember, please refresh your memory of the null hypothesis for the variance test and how to interpret the p-value.
 
 ```{r}
 ggpubr::ggarrange(ggpubr::gghistogram(cc_weight, main = "Clear Cut"), 
                   ggpubr::gghistogram(og_weight, main = "Old Growth"))
 ```
+
 The data of CG salamander abundance is right-skewed in both the Clear cut and Old growth coniferous forests based on the sample data.
 
 ```{r}
 var.test(log(cc_weight), log(og_weight))
 
 ```
+
 The weight of the CG salamander is statistically significant to test, rejecting the null hypothesis saying that this data is normally distributed. (p-value = 0.005299).
-
-
 
 ```{r}
 t.test(log(trout_clean$weight_g) ~ trout_clean$section, var.equal = TRUE)
 
 t.test(trout_clean$weight_g ~ trout_clean$section, var.equal = FALSE)
 ```
-The Two sample t-test shows that there is 
+
+The Two sample t-test shows that there is
 
 **3.** Test the correlation between body length (snout to fork length) and body mass for *Cutthroat trout*. (Hint: run `?and_vertebrates` to find which length variable represents snout to fork length) (10 pts.)
 
@@ -448,12 +451,9 @@ ggarrange(
 )
 ```
 
-
-
 ```{r}
 cor.test(log(cut_clean$length_1_mm), log(cut_clean$weight_g))
 ```
-
 
 ```{r}
 
@@ -465,13 +465,11 @@ cut_clean |>
             add = "loess")
 ```
 
-
 ```{r}
 cor.test(cut_clean$length_1_mm, cut_clean$weight_g, method = "spearman")
 ```
 
 These results also represent a significant, positive relationship between length and weight for the Cutthroat trout, with a very high correlation (rho).
-
 
 <br> <br>
 
@@ -522,12 +520,12 @@ We have 13 sites with \~30 individual male crabs measured at each site.
 
 Let's also check the range of our continuous variables:
 
-
 ## Exercises: Part 2
 
 1.  **After** completing the ANOVA test (and post-hoc Tukey's HSD) above to test for significant differences in crab size among 3 different sites: **1)** Create a boxplot showing the carapace width for each site where sites are *ordered by latitude* and **2)** report the findings of the statistical test as you would in a scientific paper. *Include both the code to create the boxplot and an image of the figure.* (10 pts.)
 
 ## Work
+
 ```{r}
 pie_crab |> 
   ggboxplot(x = 'site', y = 'size', col = 'site') +
@@ -580,12 +578,10 @@ ggboxplot(pie_anova, x = "site", y = "size", palette = "jco") +
   geom_jitter(size =.25) + 
   theme(legend.postition = "none")
 ```
-To understand the difference in crab sizes as they relate to their latitudinal location, we based our research following the Fiddler crab body size data set. With 13 sites that range in latitude from 30 degrees to 42 degrees and 13 different classes of sites, we aimed to understand the distribution within each group using an initial ANOVA test and Shapiro-Wilk normality test. With all the cases, their p-values were below 0.01, with an expection for BC and PIE, this means that the data fits within a normal distribution across grouping. During the Shapiro-WIlk normaily test, we founda residual with p-value of 0.71, accepting the null hypothesis that this data fits a normal distribution. Next using the Leven's test to understand the equalily of variance across all groups, we confirmed that the data set we focused on was NOT equal. We then tested the response to a Welch ANOVA, specifying the variance was false, this proved a highly statistically significant corelation with our site's mean is different from the others. 
+
+To understand the difference in crab sizes as they relate to their latitudinal location, we based our research following the Fiddler crab body size data set. With 13 sites that range in latitude from 30 degrees to 42 degrees and 13 different classes of sites, we aimed to understand the distribution within each group using an initial ANOVA test and Shapiro-Wilk normality test. With all the cases, their p-values were below 0.01, with an expection for BC and PIE, this means that the data fits within a normal distribution across grouping. During the Shapiro-WIlk normaily test, we founda residual with p-value of 0.71, accepting the null hypothesis that this data fits a normal distribution. Next using the Leven's test to understand the equalily of variance across all groups, we confirmed that the data set we focused on was NOT equal. We then tested the response to a Welch ANOVA, specifying the variance was false, this proved a highly statistically significant corelation with our site's mean is different from the others.
 
 To understand further, we south out to use a Tukey's HSD post-hoc test, to understand the pairwise comparisons of the 13 sites and their latitudinal significance to crab size. To simplify the statisical approach we focused on 3 sites; GTM, DB, and PIE, since they represent the wide breadth of latitudinal differences in the data. Using a 95% confidence interval with the Tukey, we found that there was a significant difference between GTM, DB, and PIE, as shown in the box plot represented above.
-
-
-
 
 2.  Conduct a simple linear regression for the effect of `water_temp_sd` (a measure reflecting annual variation in water temperature) on carapace width. Report your findings (include code *and* a sentence reporting the results) AND create a plot with a line of best fit. *Include both the code to create the plot and an image of the figure*. (10 pts).
 
@@ -601,7 +597,6 @@ pie_crab |>
             add = "reg.line")
 ```
 
-
 3.  Conduct a multiple linear regression for the effects of `latitude`, `air_temp_sd`, and `water_temp_sd` on carapace width. **First** check for correlations among the three predictor variables (and report the correlation table) and **second** report your findings from the multiple linear regression (code *and* a sentence reporting the results). (10 pts.)
 
 ```{r}
@@ -609,14 +604,16 @@ pie_crab |>
   dplyr::select(latitude, air_temp_sd, water_temp_sd) |> 
   cor()
 ```
-The correlation table understanding the relationship between latitude, air temp sd, water temp sd have correlation between air temp and latitude, but water temp sd is not correlated to thier air temp or latitude since the correlation coefficient is less than 0.7. 
+
+The correlation table understanding the relationship between latitude, air temp sd, water temp sd have correlation between air temp and latitude, but water temp sd is not correlated to thier air temp or latitude since the correlation coefficient is less than 0.7.
 
 ```{r}
 pie_mlm <- lm(size ~ latitude + air_temp_sd + water_temp_sd, data = pie_crab)
 
 summary(pie_mlm)
 ```
-The multiple linear regression model for the comparison of carapase size on latitude, air temp sd, water temp sd, shows a statistically significant trent indicating there is an impact on the combination of those predictors on the size of a crabs carapace. 
+
+The multiple linear regression model for the comparison of carapase size on latitude, air temp sd, water temp sd, shows a statistically significant trent indicating there is an impact on the combination of those predictors on the size of a crabs carapace.
 
 ## Acknowledgements
 
