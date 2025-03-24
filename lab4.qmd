@@ -73,7 +73,7 @@ library(visdat)
 Then run the following line of code to retrieve the `and_vertebrates` data set and bring it into your R session:
 
 ```{r}
-?and_vertebrates
+#?and_vertebrates
 
 data <- and_vertebrates
 
@@ -90,7 +90,7 @@ glimpse(data)
 vis_dat(data)
 
 # Exploring the metadata with the Help tab:
-?and_vertebrates
+#?and_vertebrates
 ```
 
 The data presented in this study shows an aquatic vertebrate population study of Cutthroat trout and the Cascade Torrent salamander and Coastal Giant salamanders within the clear cut or old growth coniferous forests of the Mack Creek. This was presented in Andrew's Experimental Forest located in Oregon, measuring the lengths and weights of each observed from 1987 to 2019.
