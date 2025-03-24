@@ -1,8 +1,10 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "ESS330 Lab 4: LTER Network Data"
+
   
 format:
   html:
