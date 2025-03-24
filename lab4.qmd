@@ -1,5 +1,5 @@
 ---
-title: 'Lab 4: LTER Network Data'
+title: 'ESS330 Lab 4: LTER Network Data'
 author:
   - name: "Neva Morgan"
     email: 'neva.morgan@colostate.edu'
@@ -9,6 +9,7 @@ format:
     toc: true
 execute:
   echo: true
+
 subtitle: 'Introduction to Statistics in R'
 ---
 
@@ -397,7 +398,7 @@ og_weight <- GS_clean |>
 var.test(cc_weight, og_weight)
 ```
 
-The results of this test suggests the variances are not equal. How do we know this? If you can't remember, please refresh your memory of the null hypothesis for the variance test and how to interpret the p-value.
+The results of this test suggests the variances are not equal. Because the ratio of variances is closer to 1 than 0, making the sample of this data selection of normal distribution.
 
 ```{r}
 ggpubr::ggarrange(ggpubr::gghistogram(cc_weight, main = "Clear Cut"), 
@@ -483,7 +484,7 @@ We need to install one new package for today to use a specific statistical test.
 
 ```{r eval = FALSE}
 #install the car package
-install.packages("car")
+library()
 ??car
 ```
 
@@ -503,11 +504,8 @@ vis_dat(pie_crab)
 
 Learn more about each variable:
 
-```{r}
-??pie_crab
-```
+The pie_crab data set, collected during the summer of 2016, aims to understand the differences of Fiddler crab (adult Minuca pugnax) body sizes as they are related to their local environments within the thirteen salt marshes from Florida to Massachusetts. Collected to measure how their difference in size related to the local temperature, water, and air data as understood from monitoring programs (i.e. LTER, NERR sites), nearby weather statuons, and ocean buoys. Since it is understood by the Bergmann's rule that organisms located at higher latitudes are larger than those at lower latitudes, this data tests that ruling.
 
-This data set provides a great opportunity to explore Bergmann's rule: where organisms at higher latitudes are larger than those at lower latitudes. There are various hypotheses on what drives this phenomenon, which you can read more about in [Johnson et al. 2019](https://onlinelibrary.wiley.com/doi/10.1002/ece3.5883).
 
 We have a continuous size variable (carapace width in mm), our dependent variable, and various predictor variables: site (categorical), latitude (continuous), air temperature (continuous) and water temperature (continuous).
 
@@ -615,7 +613,7 @@ pie_mlm <- lm(size ~ latitude + air_temp_sd + water_temp_sd, data = pie_crab)
 summary(pie_mlm)
 ```
 
-The multiple linear regression model for the comparison of carapase size on latitude, air temp sd, water temp sd, shows a statistically significant trent indicating there is an impact on the combination of those predictors on the size of a crabs carapace.
+The multiple linear regression model for the comparison of carapase size on latitude, air temp sd, water temp sd, shows a statistically significant trend indicating there is an impact on the combination of those predictors on the size of a crabs carapace (rejecting the null hypothesis).
 
 ## Acknowledgements
 
